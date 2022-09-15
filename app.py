@@ -22,14 +22,12 @@ app = Flask(__name__)
 
 with open('bot', 'r') as file:
     private_key = file.read()
-# private_key = open('.ssh/cleuton', 'r').read()
 prKey = serialization.load_ssh_private_key(private_key.encode(), password=b'teste')
 
 # Lendo a PUBLIC_KEY para verificar token:
 
 with open('bot.pub', 'r') as file:
     public_key = file.read()
-# public_key = open('.ssh/cleuton.pub', 'r').read()
 pubKey = serialization.load_ssh_public_key(public_key.encode())
 
 app.config["JWT_PRIVATE_KEY"] = prKey
@@ -76,18 +74,6 @@ def protected():
 
     current_user = get_jwt_identity()
     return jsonify(logado=current_user), 200
-
-
-@app.route("/demand", methods=["POST"])
-@jwt_required()
-def demand():
-    client_id = request.json.get("client_id", None)
-    mes = request.json.get("mes", None)
-    ano = request.json.get("ano", None)
-    resposta = 'Demanda aceita!'
-    # Pega a identidade do usuário logado: 
-
-    return jsonify(resposta), 200
 
 
 if __name__ == "__main__":
